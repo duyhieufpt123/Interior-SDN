@@ -90,6 +90,28 @@ http://localhost:5000/api/products/65e453eaafa2d5255355046b
 Delete Product:
 http://localhost:5000/api/products/65e4add33a4ae29b521ef80d
 
+
+
+
+Quotation:
+Get all Quotation:
+http://localhost:5000/api/standard-quotations/all
+
+Create Quotation:
+http://localhost:5000/api/standard-quotations/
+
+{
+  "quotationName": "Bọc ghế sofa",
+  "quotationDescription": "Bọc ghế sofa da beo cao cấp.",
+  "quotationCategory": "Nội thất cao cấp",
+  "quotationPrice": 1000,
+  "quotationManagedBy": "65ddd3007298f652b9db91c2",
+  "role": "Staff"
+}
+
+
+
+
 Nhớ thêm JWT cho mỗi api
 Staff thì lấy token của staff
 Admin thì lấy token của admin

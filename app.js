@@ -16,6 +16,9 @@ const cors = require('cors');
 const roleRouter = require('./routes/roleRoutes')
 const accountRouter = require('./routes/accountRoutes');
 const productRouter = require('./routes/productRoutes')
+const quotationRouter = require('./routes/quotationRoutes')
+
+
 
 var app = express();
 dotenv.config();
@@ -45,7 +48,10 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/accounts', accountRouter);
 app.use('/api/products', productRouter);
+app.use('/api/standard-quotations', quotationRouter);
+
 app.use('/api/role', roleRouter);
+
 
 //Accept Cors
 app.use(cors({credentials: true, origin: "*", exposedHeaders: '*'}));
