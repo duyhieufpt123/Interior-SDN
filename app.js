@@ -13,12 +13,9 @@ const swaggerDocument = require('./swagger');
 const cors = require('cors');
 
 
-
+const roleRouter = require('./routes/roleRoutes')
 const accountRouter = require('./routes/accountRoutes');
-const habitatRouter = require('./routes/habitatRoutes');
-const ticketRouter = require('./routes/ticketRoutes');
-const orderRouter = require('./routes/orderRoutes')
-const animalRouter = require('./routes/animalRoutes')
+const productRouter = require('./routes/productRoutes')
 
 var app = express();
 dotenv.config();
@@ -47,13 +44,12 @@ app.use(bodyParser.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/accounts', accountRouter);
-app.use('/api/habitats', habitatRouter);
-app.use('/api/tickets', ticketRouter);
-app.use('/api/orders', orderRouter)
-app.use('/api/animals', animalRouter)
+app.use('/api/products', productRouter);
+app.use('/api/role', roleRouter);
 
 //Accept Cors
 app.use(cors({credentials: true, origin: "*", exposedHeaders: '*'}));
+
 
 
 

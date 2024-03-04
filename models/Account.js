@@ -31,6 +31,21 @@ const accountSchema = new mongoose.Schema({
     lowercase: true
   },
 
+  address: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    lowercase: true
+  },
+
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true
+  },
+
   password: {
     type: String,
     required: true
@@ -42,8 +57,9 @@ const accountSchema = new mongoose.Schema({
   roleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role'
-    //029: guest
-    //025: admin
+    //b2: Admin
+    //be: Staff 
+    //b6: Customer
   },
   tokens: {
       type: [String],

@@ -23,13 +23,22 @@ const auth = async (req, res, next) => {
 
 // Check admin
 const admin = async (req, res, next) => {
-  if (req.role !== 'Admin') {
+  if (req.role !== 'admin') {
     return res.status(403).send({ error: 'Requires admin access.' });
   }
   next();
 };
 
+const staff = async (req, res, next) => {
+  if (req.role !== 'staff') {
+    return res.status(403).send({ error: 'Requires staff access.' });
+  }
+  next();
+};
+
+
 module.exports = {
   auth,
-  admin
+  admin,
+  staff
 };

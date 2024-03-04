@@ -17,7 +17,7 @@ const register = async (req, res) => {
       return res.status(409).send({ error: 'Username already exist with another account.' });
     }
 
-    const defaultRole = await Role.findOne({ name: 'guest' });
+    const defaultRole = await Role.findOne({ name: 'Customer' });
     if (!defaultRole) {
       throw new Error('Default role not found.');
     }
@@ -118,7 +118,7 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ['firstName', 'lastName', 'email', 'password'];
+  const allowedUpdates = ['firstName', 'lastName', 'email', 'password', 'roleId'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
   if (!isValidOperation) {
@@ -141,7 +141,10 @@ const getAllAccounts = async (req, res) => {
   try {
     const accounts = await Account.find({})
       .populate('roleId', 'name -_id')
-      .select('_id firstName lastName email dateOfBirth username tokens');
+      .select('_id firstName lastName email phone address dateOfBirth username tokens ');
+
+    console.log(accounts); 
+
 
     const formattedAccounts = accounts.map(account => {
       const accountObj = account.toObject();
@@ -150,6 +153,8 @@ const getAllAccounts = async (req, res) => {
         firstName: accountObj.firstName,
         lastName: accountObj.lastName,
         email: accountObj.email,
+        phone: accountObj.phone,
+        address: accountObj.address,
         dateOfBirth: accountObj.dateOfBirth,
         username: accountObj.username,
         tokens: accountObj.tokens,
@@ -165,6 +170,7 @@ const getAllAccounts = async (req, res) => {
 };
 
 
+
 const deleteAccount = async (req, res) => {
   try {
     const account = await Account.findByIdAndDelete(req.params.id);
@@ -178,6 +184,7 @@ const deleteAccount = async (req, res) => {
     res.status(500).send(error);
   }
 }
+
 
 module.exports = {
   register,
