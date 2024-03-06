@@ -11,6 +11,7 @@ const Role = require('./models/Role');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger');
 const cors = require('cors');
+require('./middleware/checkAccountStatus')
 
 
 const roleRouter = require('./routes/roleRoutes')
@@ -43,6 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
 
+
 //Swagger route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -55,6 +57,7 @@ app.use('/api/role', roleRouter);
 
 //Accept Cors
 app.use(cors({credentials: true, origin: "*", exposedHeaders: '*'}));
+
 
 
 

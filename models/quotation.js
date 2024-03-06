@@ -27,6 +27,11 @@ const quotationSchema = new mongoose.Schema({
     type: String,
     enum: ['Admin', 'Customer', 'Staff'],
     required: true,
+  },
+  status: {
+    type: String,
+    enum: ['active', 'inactive'],
+    default: 'active',
   }
 }, {
   timestamps: true

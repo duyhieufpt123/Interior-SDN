@@ -6,12 +6,20 @@ const Role = require('../models/Role');
 const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).send({ error: 'No token provided.' });
+    }
+    console.log(token)
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const account = await Account.findOne({ _id: decoded._id});
+    console.log(decoded);
+
+    const account = await Account.findOne({ _id: decoded._id, 'tokens': token, 'status': 'active' });
 
     if (!account) {
-      throw new Error('Account not found with this token');
+      return res.status(401).send({ error: 'Account not found.' });
     }
+    console.log(account)
 
     req.token = token;
     req.account = account;

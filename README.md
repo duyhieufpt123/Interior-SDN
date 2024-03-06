@@ -8,17 +8,17 @@ Login:
 http://localhost:5000/api/accounts/login
 
 {
-  "username": "admin01",
+  "username": "admin02",
   "password": "123456"
 }
 
-admin: admin01
+admin: admin02
+pass: 1234567
+
+staff: staff02
 pass: 123456
 
-staff: staff01
-pass: 123456
-
-customer: dyhieu
+customer: duyhieudeptrai
 pass: 123456
 
 default role register ( customer )

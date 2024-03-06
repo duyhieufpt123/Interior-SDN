@@ -9,4 +9,6 @@ router.post('/', auth, roleCheck('admin'), quotationController.createQuotation);
 
 router.get('/all', auth, quotationController.getQuotations);
 
+router.put('/', auth, roleCheck('admin'), quotationController.updateQuotationById);
+
 module.exports = router;

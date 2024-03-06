@@ -14,41 +14,55 @@ const register = async (req, res) => {
   try {
     const existingAccount = await Account.findOne({ username: req.body.username });
     if (existingAccount) {
-      return res.status(409).send({ error: 'Username already exist with another account.' });
+      return res.status(409).send({ error: 'Username already exists with another account.' });
     }
 
-    const defaultRole = await Role.findOne({ name: 'Customer' });
+    const defaultRole = await Role.findOne({ name: 'customer' });
     if (!defaultRole) {
       throw new Error('Default role not found.');
     }
+    const hashedPassword = await bcrypt.hash(req.body.password, 8);
 
     const account = new Account({
       ...req.body,
+      password: hashedPassword, 
       roleId: defaultRole._id,
     });
 
     const token = await generateAuthToken(account);
-    account.tokens = token;
+    account.tokens = [token]; 
     await account.save();
     res.status(201).send({ account });
   } catch (error) {
-    console.error('Error during password reset request:', error.stack);
+    console.log(error);
     res.status(500).send({ error: 'There was an error processing your request.' });
   }
 };
 
 
+
 const login = async (req, res) => {
-  console.log(req.body);
   try {
     const { username, password } = req.body;
     const account = await Account.findByCredentials(username, password);
+    
     if (!account) {
-      return res.status(401).send({ error: 'Login failed!' });
+      return res.status(401).send({ error: 'Login failed' });
     }
+
+    if (account.status !== 'active') {
+      return res.status(403).send({ error: 'Account is Inactive, please contact support to activate it again.' });
+    }
+
+    account.lastLogin = Date.now();
+    await account.save();
+
+    console.log('Sending success response');
     res.send({ account });
+
   } catch (error) {
-    res.status(400).send(error);
+    console.log('Login failed:', error.message);
+    return res.status(400).send({ error: error.message });
   }
 };
 
@@ -99,17 +113,19 @@ const getProfile = async (req, res) => {
 
     const accountData = req.account.toObject();
 
-    const responseData = {
+    const result = {
       accountid: accountData._id,
       firstName: accountData.firstName,
       lastName: accountData.lastName,
       email: accountData.email,
       dateOfBirth: accountData.dateOfBirth,
       username: accountData.username,
-      roleName: accountData.roleId ? accountData.roleId.name : undefined
+      roleName: accountData.roleId ? accountData.roleId.name : undefined,
+      status: accountData.status
+
     };
 
-    res.send(responseData);
+    res.send(result);
   } catch (error) {
     console.error('Failed to get profile:', error);
     res.status(500).send({ error: error.message });
@@ -118,7 +134,7 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ['firstName', 'lastName', 'email', 'password', 'roleId'];
+  const allowedUpdates = ['firstName', 'lastName', 'email', 'password', 'roleId', 'status'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
   if (!isValidOperation) {
@@ -126,43 +142,51 @@ const updateProfile = async (req, res) => {
   }
 
   try {
-    updates.forEach((update) => req.account[update] = req.body[update]);
-    if (req.body.password) {
-      req.account.password = await bcrypt.hash(req.body.password, 8);
+    let isPasswordBeingUpdated = updates.includes('password');
+
+    for (const update of updates) {
+      if (update === 'password' && isPasswordBeingUpdated) {
+        req.account.password = await bcrypt.hash(req.body.password, 8);
+      } else {
+        req.account[update] = req.body[update];
+      }
     }
-    await req.account.save();
-    res.send(req.account);
+    await req.account.save(); 
+    res.send(req.account);   
   } catch (error) {
     res.status(400).send(error);
   }
 };
 
+
+
 const getAllAccounts = async (req, res) => {
   try {
     const accounts = await Account.find({})
       .populate('roleId', 'name -_id')
-      .select('_id firstName lastName email phone address dateOfBirth username tokens ');
+      .select('_id firstName lastName email phone address dateOfBirth username tokens status');
 
-    console.log(accounts); 
+    console.log(accounts);
 
 
-    const formattedAccounts = accounts.map(account => {
-      const accountObj = account.toObject();
+    const result = accounts.map(account => {
+      const accountData = account.toObject();
       return {
-        accountId: accountObj._id,
-        firstName: accountObj.firstName,
-        lastName: accountObj.lastName,
-        email: accountObj.email,
-        phone: accountObj.phone,
-        address: accountObj.address,
-        dateOfBirth: accountObj.dateOfBirth,
-        username: accountObj.username,
-        tokens: accountObj.tokens,
-        roleName: accountObj.roleId ? accountObj.roleId.name : undefined, // Đổi roleID thành roleName cho dễ nhìn
+        accountId: accountData._id,
+        status: accountData.status,
+        firstName: accountData.firstName,
+        lastName: accountData.lastName,
+        email: accountData.email,
+        phone: accountData.phone,
+        address: accountData.address,
+        dateOfBirth: accountData.dateOfBirth,
+        username: accountData.username,
+        tokens: accountData.tokens,
+        roleName: accountData.roleId ? accountData.roleId.name : undefined // Đổi roleID thành roleName cho dễ nhìn
       };
     });
 
-    res.status(200).send(formattedAccounts);
+    res.status(200).send(result);
   } catch (error) {
     console.error('Failed to get accounts:', error);
     res.status(500).send(error.message || 'Server Error');

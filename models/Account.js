@@ -64,19 +64,29 @@ const accountSchema = new mongoose.Schema({
   tokens: {
       type: [String],
       required: true,
-  }
+  },
+  status: {
+    type: String,
+    enum: ['active', 'inactive'],
+    default: 'active'
+  },
+  lastLogin: {
+    type: Date,
+    default: Date.now
+  },
 }, {
   timestamps: true
 });
 
 // hash mật khẩu
-accountSchema.pre('save', async function (next) {
-  const account = this;
-  if (account.isModified('password')) {
-    account.password = await bcrypt.hash(account.password, 8);
-  }
-  next();
-});
+// accountSchema.pre('save', async function(next) {
+//   if (this.isModified('password')) {
+//     this.password = await bcrypt.hash(this.password, 8);
+//   }
+//   next();
+// });
+
+
 
 // Xác thực mật khẩu
 accountSchema.statics.findByCredentials = async function(username, password) {
@@ -84,15 +94,52 @@ accountSchema.statics.findByCredentials = async function(username, password) {
   if (!account) {
     throw new Error('Unable to login. User not found.');
   }
-  console.log('Stored hash:', account.password);
-  console.log('Password being checked:', password);
 
   const isMatch = await bcrypt.compare(password, account.password);
   if (!isMatch) {
-    throw new Error('Unable to login. Password incorrect.');
+    throw new Error('Login failed: Password incorrect.');
   }
+  
   return account;
 };
+
+
+
+// const password = '1234567';
+// const hash = '$2a$08$p.E5gP51pcPdmcRxt.ekD.HV3kUhdYUVwBwJ6Wx7fOJCxgOzZpE6G';
+// bcrypt.hash(password, 8, function(err, hash) {
+//   if (err) {
+//     console.error(err);
+//   } else {
+//     console.log('New Hash:', hash);
+//     bcrypt.compare(password, hash, function(err, result) {
+//       if (err) {
+//         console.error(err);
+//       } else if (result) {
+//         console.log('Password matches');
+//       } else {
+//         console.log('Password does not match');
+//       }
+//     });
+//   }
+// });
+// bcrypt.compare(password, hash, function(err, result) {
+//   if (result) {
+//     console.log('Password matches');
+//   } else {
+//     console.log('Password does not match');
+//   }
+// });
+
+
+
+// // accountSchema.pre('save', async function (next) {
+// //   if (this.isModified('password')) {
+// //     this.password = await bcrypt.hash(this.password, 8);
+// //   }
+// //   next();
+// // });
+
 
 // Ham password reset
 accountSchema.methods.createPasswordResetToken = function () {

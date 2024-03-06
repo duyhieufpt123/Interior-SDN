@@ -31,9 +31,33 @@ const getQuotations = async (req, res) => {
       res.status(500).send(error);
     }
   };
+
+const updateQuotationById = async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ['quotationName', 'quotationDescription', 'quotationCategory', 'quotationPrice', 'quotationManagedBy', 'role', 'status']
+
+  const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+
+  if(!isValidOperation){
+    return res.status(400).send({ error: 'Invalid updates Quotation!'})
+  }
+
+  try{
+    const quotation = await Quotation.findById(req.params.id);
+    if(!quotation){
+      return res.status(400).send({ error: 'Quotation not found '})
+    }
+    updates.forEach((update) => product[update] = req.body[update]);
+    await quotation.save();
+    res.send(quotation);
+  } catch(error){
+    res.status(400).send({error: 'Update Quotation failed, please check again!'})
+  }
+}
   
 
 module.exports = {
   createQuotation,
   getQuotations,
+  updateQuotationById
 };
