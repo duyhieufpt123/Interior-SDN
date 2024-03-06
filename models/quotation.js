@@ -25,8 +25,9 @@ const quotationSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['Admin', 'Customer', 'Staff'],
+    enum: ['admin', 'customer', 'staff'],
     required: true,
+    default: 'staff'
   },
   status: {
     type: String,

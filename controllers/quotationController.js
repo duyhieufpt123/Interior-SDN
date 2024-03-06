@@ -47,11 +47,20 @@ const updateQuotationById = async (req, res) => {
     if(!quotation){
       return res.status(400).send({ error: 'Quotation not found '})
     }
-    updates.forEach((update) => product[update] = req.body[update]);
+    updates.forEach((update) => quotation[update] = req.body[update]);
     await quotation.save();
     res.send(quotation);
+    console.log(quotation)
   } catch(error){
     res.status(400).send({error: 'Update Quotation failed, please check again!'})
+  }
+}
+
+const caculateQuotation = async (req, res) =>{
+  try{
+
+  } catch(error){
+
   }
 }
   
@@ -59,5 +68,6 @@ const updateQuotationById = async (req, res) => {
 module.exports = {
   createQuotation,
   getQuotations,
-  updateQuotationById
+  updateQuotationById,
+  caculateQuotation
 };

@@ -106,10 +106,21 @@ http://localhost:5000/api/standard-quotations/
   "quotationCategory": "Nội thất cao cấp",
   "quotationPrice": 1000,
   "quotationManagedBy": "65ddd3007298f652b9db91c2",
-  "role": "Staff"
 }
 
+Update Quotation:
+http://localhost:5000/api/standard-quotations/65e61c9536d85f28ba04c77c
 
+    {
+        "quotationName": "Ốp gỗ",
+        "quotationDescription": "Ốp gỗ mun vip.",
+        "quotationCategory": "Nội thất cao cấp",
+        "quotationPrice": 1000,
+        "quotationManagedBy":"65e8b775c31f50c9e3bec743",
+        "role": "staff",
+        "status": "active"
+
+    }
 
 
 Nhớ thêm JWT cho mỗi api
