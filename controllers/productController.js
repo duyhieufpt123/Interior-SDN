@@ -17,7 +17,7 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ['productPrice', 'productQuantity', 'productType'];
+  const allowedUpdates = ['productPrice', 'productQuantity', 'productType', 'productImage'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
   if (!isValidOperation) {
@@ -81,7 +81,6 @@ const getAllProducts = async (req, res) => {
 const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
-    // .populate('habitat', 'habitatName habitatType habitatSize condition -_id');
     if (!product) {
       return res.status(404).send({ message: 'Product not found' });
     }
@@ -105,120 +104,6 @@ const getProductById = async (req, res) => {
 };
 
 
-//   try {
-//     const productType = req.params.type;
-//     const page = parseInt(req.query.page) || 1;
-//     const limit = parseInt(req.query.limit) || 10;
-//     const skip = (page - 1) * limit;
-
-//     const products = await Product.find({ productType }).skip(skip).limit(limit);
-//     const total = await Product.countDocuments({ productType });
-
-//     const result = products.map(product => ({
-//       productid: product._id,
-//       productName: product.productName,
-//       productPrice: product.productPrice,
-//       productType: product.productType,
-//       productImage: product.productImage,
-//       productSize: product.productSize,
-//       dateImport: product.dateImport,
-//       productQuantity: product.productQuantity,
-//       productMaterial: product.productMaterial,
-//       productDescription: product.productDescription
-//     }));
-
-//     res.status(200).send({ total, page, pages: Math.ceil(total / limit), data: result });
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// };
-
-
-// const filterProductByPriceAsc = async (req, res) => {
-//   try {
-//     const page = parseInt(req.query.page) || 1;
-//     const limit = parseInt(req.query.limit) || 10;
-//     const skip = (page - 1) * limit;
-
-//     const products = await Product.find({}).sort({ productPrice: 1 })
-//                                            .skip(skip)
-                                          //  .limit(limit);
-//     const total = await Product.countDocuments();
-
-//     const result = products.map(product => ({
-//       productid: product._id,
-//       productName: product.productName,
-//       productPrice: product.productPrice,
-//       productImage: product.productImage,
-//       productSize: product.productSize,
-//       dateImport: product.dateImport,
-//       productQuantity: product.productQuantity,
-//       productMaterial: product.productMaterial,
-//       productDescription: product.productDescription
-//     }));
-
-//     res.status(200).send({ total, page, pages: Math.ceil(total / limit), data: result });
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// };
-
-
-// const filterProductByPriceDesc = async (req, res) => {
-//   try {
-//     const page = parseInt(req.query.page) || 1;
-//     const limit = parseInt(req.query.limit) || 10;
-//     const skip = (page - 1) * limit;
-
-//     const products = await Product.find({})
-//                                    .sort({ productPrice: -1 })
-//                                    .skip(skip)
-//                                    .limit(limit);
-//     const total = await Product.countDocuments();
-
-//     const result = products.map(product => ({
-//       productid: product._id,
-//       productName: product.productName,
-//       productPrice: product.productPrice,
-//       productImage: product.productImage,
-//       productSize: product.productSize,
-//       dateImport: product.dateImport,
-//       productQuantity: product.productQuantity,
-//       productMaterial: product.productMaterial,
-//       productDescription: product.productDescription
-//     }));
-
-//     res.status(200).send({ total, page, pages: Math.ceil(total / limit), data: result });
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// };
-// const filterProductByNameA_Z = async (req, res) => {
-//   try {
-//     const page = parseInt(req.query.page) || 1;
-//     const limit = parseInt(req.query.limit) || 10;
-//     const skip = (page - 1) * limit;
-
-//     const products = await Product.find({}).sort({ productName: 1 }).skip(skip).limit(limit);
-//     res.status(200).send(products);
-
-//     const result = products.map(product => ({
-//       productid: product._id,
-//       productName: product.productName,
-//       productPrice: product.productPrice,
-//       productImage: product.productImage,
-//       productSize: product.productSize,
-//       dateImport: product.dateImport,
-//       productQuantity: product.productQuantity,
-//       productMaterial: product.productMaterial,
-//       productDescription: product.productDescription
-//     }));
-
-//     res.status(200).send({ total, page, pages: Math.ceil(total / limit), data: result });
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// };
 
 const getProductByName = async (req, res) => {
   try {
@@ -259,7 +144,6 @@ const getProductByName = async (req, res) => {
 };
 
 
-//     try {
 //       const habitatId = req.params.habitatId;
 //       const habitat = await Habitat.findById(habitatId, 'habitatName habitatType condition -_id');
 
@@ -306,10 +190,6 @@ module.exports = {
   createProduct,
   getAllProducts,
   getProductById,
-  // getProductByType,
-  // filterProductByPriceAsc,
-  // filterProductByPriceDesc,
-  // filterProductByNameA_Z,
   updateProduct,
   getProductByName,
   deleteProduct

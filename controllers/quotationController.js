@@ -1,4 +1,6 @@
 const Quotation = require('../models/quotation');
+const Account = require('../models/Account');
+const sendEmail = require('../utils/mailer')
 
 const createQuotation = async (req, res) => {
   try {
@@ -56,18 +58,48 @@ const updateQuotationById = async (req, res) => {
   }
 }
 
-const caculateQuotation = async (req, res) =>{
-  try{
+const calculateQuotation = async (req, res) => {
+  try {
+    const { quotationIds, email, phone } = req.body;
 
-  } catch(error){
+    const account = await Account.findOne({ email: email });
+    if (!account) {
+      return res.status(404).send({ message: 'Account not found.' });
+    }
 
+    const customerName = `${account.firstName} ${account.lastName}`;
+
+    const customerPhone = account.phone;
+
+    const quotations = await Quotation.find({
+      '_id': { $in: quotationIds }
+    });
+    const totalPrice = quotations.reduce((sum, quotation) => sum + quotation.quotationPrice, 0);
+
+    const subject = 'Your Quotation Estimate Prices';
+    const text = `Dear ${customerName},\n\nYour estimated price is: ${totalPrice}$.\n\nThank You for using our service.\n\nFaithfully,\nThái MMA Interior`;
+
+
+    await sendEmail(account._id, subject, text);
+
+    res.status(200).send({
+      message: "Quotation calculated and email sent successfully.",
+      listQuotation: quotationIds,
+      customerName: customerName,
+      customerPhone: customerPhone,
+      estimateCost: totalPrice
+      
+    });
+  } catch (error) {
+    res.status(500).send(error);
   }
-}
+};
+
   
 
 module.exports = {
   createQuotation,
   getQuotations,
   updateQuotationById,
-  caculateQuotation
+  calculateQuotation
 };
