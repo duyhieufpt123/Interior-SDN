@@ -25,18 +25,18 @@ const projectSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-    enum: ['in progress', 'completed'],
+    enum: ['pending','in progress', 'cancelled', 'completed'],
   },
   client: {
     type: String,
     ref: 'Account',
     required: true
   },
-  quotation: {
+  quotation: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Quotation',
     required: true
-  }
+  }]
 }, {
   timestamps: true
 });

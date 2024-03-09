@@ -31,8 +31,8 @@ const getAllBlogs = async (req, res) => {
 
         const result = blogsArticles.map(blogs => ({
             blogsid: blogs._id,
-            title: blogs.title, 
-            content: blogs.content,
+            blogsTitle: blogs.blogsTitle, 
+            blogsContent: blogs.blogsContent,
             publishDate: blogs.publishDate,
             author: blogs.author,
             images: blogs.images
@@ -60,8 +60,8 @@ const getBlogById = async (req, res) => {
         }
         const result = {
             blogsid: blogs._id,
-            title: blogs.blogsTitle,
-            content: blogs.blogsContent,
+            blogsTitle: blogs.blogsTitle,
+            blogsContent: blogs.blogsContent,
             publishDate: blogs.publishDate,
             author: blogs.author,
             images: blogs.images

@@ -19,6 +19,8 @@ const accountRouter = require('./routes/accountRoutes');
 const productRouter = require('./routes/productRoutes');
 const newsRouter = require('./routes/newsRoutes');
 const quotationRouter = require('./routes/quotationRoutes');
+const blogsRouter = require('./routes/blogRoutes')
+const projectRouter = require('./routes/projectRoutes')
 
 
 
@@ -52,6 +54,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/accounts', accountRouter);
 app.use('/api/products', productRouter);
 app.use('/api/news', newsRouter);
+app.use('/api/blogs', blogsRouter);
+app.use('/api/project', projectRouter)
 
 app.use('/api/standard-quotations', quotationRouter);
 
