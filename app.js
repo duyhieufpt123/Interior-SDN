@@ -14,10 +14,11 @@ const cors = require('cors');
 require('./middleware/checkAccountStatus')
 
 
-const roleRouter = require('./routes/roleRoutes')
+const roleRouter = require('./routes/roleRoutes');
 const accountRouter = require('./routes/accountRoutes');
-const productRouter = require('./routes/productRoutes')
-const quotationRouter = require('./routes/quotationRoutes')
+const productRouter = require('./routes/productRoutes');
+const newsRouter = require('./routes/newsRoutes');
+const quotationRouter = require('./routes/quotationRoutes');
 
 
 
@@ -50,6 +51,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/accounts', accountRouter);
 app.use('/api/products', productRouter);
+app.use('/api/news', newsRouter);
+
 app.use('/api/standard-quotations', quotationRouter);
 
 app.use('/api/role', roleRouter);

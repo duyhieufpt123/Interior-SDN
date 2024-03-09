@@ -70,7 +70,14 @@ const getAllProducts = async (req, res) => {
       productDescription: product.productDescription
     }));
 
-    res.status(200).send({ total, page, pages: Math.ceil(total / limit), data: result });
+    const totalPages = Math.ceil(total / limit);
+
+
+    res.status(200).send({ 
+      totalPages: totalPages, 
+      currentPage: page, 
+      totalItems: total, 
+      data: result });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -143,36 +150,6 @@ const getProductByName = async (req, res) => {
   }
 };
 
-
-//       const habitatId = req.params.habitatId;
-//       const habitat = await Habitat.findById(habitatId, 'habitatName habitatType condition -_id');
-
-//       if (!habitat) {
-//         return res.status(404).send({ message: 'Habitat not found' });
-//       }
-
-//       const animals = await Animal.find({ habitat: habitatId }, '_id animalName animalSpecies dateOfBirth animalSex');
-
-//       const result = {
-//         habitat: {
-//           habitatName: habitat.habitatName,
-//           habitatType: habitat.habitatType,
-//           condition: habitat.condition,
-//           animals: animals.map(animal => ({
-//             animalid: animal._id,
-//             animalName: animal.animalName,
-//             animalSpecies: animal.animalSpecies,
-//             dateOfBirth: animal.dateOfBirth,
-//             animalSex: animal.animalSex
-//           }))
-//         }
-//       };
-
-//       res.status(200).send(result);
-//     } catch (error) {
-//       res.status(500).send(error);
-//     }
-//   };
 
 const deleteProduct = async (req, res) => {
   try {

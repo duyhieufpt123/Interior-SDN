@@ -17,22 +17,40 @@ const createQuotation = async (req, res) => {
 };
 
 const getQuotations = async (req, res) => {
-    try {
-      const quotations = await Quotation.find({}, 'quotationName quotationDescription quotationCategory quotationPrice');
-  
+  try {
+      const page = parseInt(req.query.page, 10) || 1; 
+      const limit = parseInt(req.query.limit, 10) || 10;
+      
+      const skip = (page - 1) * limit;
+
+      const total = await Quotation.countDocuments();
+
+      const quotations = await Quotation.find({}, 'quotationName quotationDescription quotationCategory quotationPrice')
+          .skip(skip)
+          .limit(limit);
+
       const results = quotations.map(quotation => ({
-        quotationId: quotation._id,
-        quotationName: quotation.quotationName,
-        quotationDescription: quotation.quotationDescription,
-        quotationCategory: quotation.quotationCategory,
-        quotationPrice: quotation.quotationPrice,
+          quotationId: quotation._id,
+          quotationName: quotation.quotationName,
+          quotationDescription: quotation.quotationDescription,
+          quotationCategory: quotation.quotationCategory,
+          quotationPrice: quotation.quotationPrice,
       }));
-  
-      res.status(200).json(results);
-    } catch (error) {
-      res.status(500).send(error);
-    }
-  };
+
+      const totalPages = Math.ceil(total / limit);
+
+      res.status(200).json({
+          totalPages: totalPages,
+          currentPage: page,
+          limit: limit,
+          totalItems: total,
+          data: results
+      });
+  } catch (error) {
+      res.status(500).send({ error: error.message });
+  }
+};
+
 
 const updateQuotationById = async (req, res) => {
   const updates = Object.keys(req.body);
