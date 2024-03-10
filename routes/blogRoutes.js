@@ -5,8 +5,8 @@ const { auth } = require('../middleware/auth');
 const roleCheck = require('../middleware/roleCheck');
 
 router.post('/', auth, roleCheck('staff'), blogsController.createBlogs);
-router.get('/', auth, blogsController.getAllBlogs);
-router.get('/:id', auth, blogsController.getBlogById);
+router.get('/', blogsController.getAllBlogs);
+router.get('/:id', blogsController.getBlogById);
 router.delete('/:id', auth, roleCheck('staff'), blogsController.deleteBlogById);
 
 
