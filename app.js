@@ -25,6 +25,7 @@ const projectRouter = require('./routes/projectRoutes')
 
 
 var app = express();
+app.use(cors());
 dotenv.config();
 
 // Connect to MongoDB
