@@ -6,7 +6,7 @@ const roleCheck = require('../middleware/roleCheck');
 
 
 router.post('/', auth, roleCheck('admin'), quotationController.createQuotation);
-router.get('/', auth, quotationController.getQuotations);
+router.get('/', quotationController.getQuotations);
 router.put('/:id', auth, roleCheck('admin'), quotationController.updateQuotationById);
 router.post('/calculate-quotation', auth, quotationController.calculateQuotation);
 
