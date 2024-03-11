@@ -28,7 +28,7 @@ Get Account Profile:
 http://localhost:5000/api/accounts/profile
 
 Admin Get All Account:
-http://localhost:5000/api/accounts/all
+http://localhost:5000/api/accounts/
 
 Update Profile:
 http://localhost:5000/api/accounts/profile
