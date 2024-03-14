@@ -10,26 +10,26 @@ const productSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  productPrices: [{
+  productPrice: {
     type: Number,
     required: true,
-  }],
+  },
   productType: {
     type: String,
     required: true,
   },
-  productImages: [{
+  productImage: {
     type: String,
     required: true, 
-  }],
+  },
   productMaterial: {
     type: String,
     required: true, 
   },
-  productSizes: [{
+  productSize: {
     type: String,
     required: true, 
-  }],
+  },
   productQuantity:{
     type: Number,
     required: true
