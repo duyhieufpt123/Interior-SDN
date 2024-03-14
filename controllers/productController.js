@@ -102,7 +102,6 @@ const getProductById = async (req, res) => {
       productQuantity: product.productQuantity,
       productMaterial: product.productMaterial,
       productDescription: product.productDescription
-      // habitat: animal.habitat
     };
     res.status(200).send(result);
   } catch (error) {
