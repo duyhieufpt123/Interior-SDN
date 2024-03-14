@@ -17,7 +17,7 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ['productPrice', 'productQuantity', 'productType', 'productImage'];
+  const allowedUpdates = ['productPrices', 'productQuantity', 'productType', 'productImage'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
   if (!isValidOperation) {
@@ -60,10 +60,10 @@ const getAllProducts = async (req, res) => {
     const result = products.map(product => ({
       productid: product._id,
       productName: product.productName,
-      productPrice: product.productPrice,
+      productPrice: product.productPrices,
       productType: product.productType,
-      productImage: product.productImage,
-      productSize: product.productSize,
+      productImages: product.productImages,
+      productSizes: product.productSizes,
       dateImport: product.dateImport,
       productQuantity: product.productQuantity,
       productMaterial: product.productMaterial,
@@ -94,10 +94,10 @@ const getProductById = async (req, res) => {
     const result = {
       productid: product._id,
       productName: product.productName,
-      productPrice: product.productPrice,
+      productPrice: product.productPrices,
       productType: product.productType,
-      productImage: product.productImage,
-      productSize: product.productSize,
+      productImage: product.productImages,
+      productSize: product.productSizes,
       dateImport: product.dateImport,
       productQuantity: product.productQuantity,
       productMaterial: product.productMaterial,
