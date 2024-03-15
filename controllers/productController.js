@@ -17,7 +17,7 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ['productPrices', 'productQuantity', 'productType', 'productImage'];
+  const allowedUpdates = ['productPrice', 'productQuantity', 'productType', 'productImage'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
   if (!isValidOperation) {
