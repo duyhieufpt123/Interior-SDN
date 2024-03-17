@@ -28,7 +28,7 @@ Get Account Profile:
 http://localhost:5000/api/accounts/profile
 
 Admin Get All Account:
-http://localhost:5000/api/accounts/
+http://localhost:5000/api/accounts/all
 
 Update Profile:
 http://localhost:5000/api/accounts/profile
@@ -68,6 +68,12 @@ http://localhost:5000/api/products/
     "productMaterial": "Perfect Sắt",
     "productDescription": "Chiếc bàn Gaming bao chất."
 }
+
+get all roles:
+http://localhost:5000/api/role/roles
+
+
+
 
 Get All Products:
 http://localhost:5000/api/products/
