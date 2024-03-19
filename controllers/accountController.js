@@ -29,7 +29,17 @@ const register = async (req, res) => {
       roleId: defaultRole._id,
     });
 
-    const registerForstaff = async (req, res) => {
+    const token = await generateAuthToken(account);
+    account.tokens = [token]; 
+    await account.save();
+    res.status(201).send({ account });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: 'There was an error processing your request.' });
+  }
+};
+
+const registerForStaff = async (req, res) => {
   try {
     const existingAccount = await Account.findOne({ username: req.body.username });
     if (existingAccount) {
