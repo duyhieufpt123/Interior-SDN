@@ -106,11 +106,12 @@ const requestPasswordReset = async (req, res) => {
       return res.status(404).send({ error: 'User not found.' });
     }
 
-    const resetToken = account.createPasswordResetToken();
-    await account.save({ validateBeforeSave: false });
+    const newPassword = "dumaconcac";
+    account.password = await bcrypt.hash(newPassword, 8);
+    await account.save();
 
-    const resetURL = `${req.protocol}://${req.get('host')}/api/accounts/resetPassword/${resetToken}`;
-    await sendEmail(account._id, 'Password Reset', `Please reset your password by clicking the following link: ${resetURL}`);
+    const message = `Your password has been reset. Your new password is ${newPassword}.`;
+    await sendEmail(account._id, 'Password Reset Notification', message);
 
 
     res.status(200).send({ message: 'Password reset email sent.' });
