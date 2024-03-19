@@ -29,6 +29,25 @@ const register = async (req, res) => {
       roleId: defaultRole._id,
     });
 
+    const registerForstaff = async (req, res) => {
+  try {
+    const existingAccount = await Account.findOne({ username: req.body.username });
+    if (existingAccount) {
+      return res.status(409).send({ error: 'Username already exists with another account.' });
+    }
+
+    const defaultRole = await Role.findOne({ name: 'staff' });
+    if (!defaultRole) {
+      throw new Error('Default role not found.');
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password, 8);
+
+    const account = new Account({
+      ...req.body,
+      password: hashedPassword, 
+      roleId: defaultRole._id,
+    });
+
     const token = await generateAuthToken(account);
     account.tokens = [token]; 
     await account.save();
@@ -218,7 +237,8 @@ module.exports = {
   getAllAccounts,
   deleteAccount,
   requestPasswordReset,
-  resetPassword
+  resetPassword,
+  registerForstaff
 };
 
 
