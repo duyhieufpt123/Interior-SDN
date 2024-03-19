@@ -181,7 +181,8 @@ const updateProfile = async (req, res) => {
       }
     }
     await req.account.save(); 
-    res.send(req.account);   
+    res.send(req.account);  
+    console.log(account) 
   } catch (error) {
     res.status(400).send(error);
   }
@@ -189,7 +190,7 @@ const updateProfile = async (req, res) => {
 
 const AdminUpdateProfile = async (req, res) => {
   const updates = Account.findByIdAndUpdate(req.params.id);
-  const allowedUpdates = ['firstName', 'lastName', 'email', 'roleId', 'status'];
+  const allowedUpdates = ['firstName', 'lastName','roleId', 'status'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
   if (!isValidOperation) {
