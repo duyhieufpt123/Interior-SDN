@@ -12,7 +12,7 @@ const generateAuthToken = async (user) => {
 
 const register = async (req, res) => {
   try {
-    const existingAccount = await Account.find({ username: req.body.username, email:req.body.email });
+    const existingAccount = await Account.findOne({ username: req.body.username, email:req.body.email });
     if (existingAccount) {
       return res.status(409).send({ error: 'Username or email already exists with another account.' });
     }
@@ -189,30 +189,38 @@ const updateProfile = async (req, res) => {
 };
 
 const AdminUpdateProfile = async (req, res) => {
-  const updates = Account.findByIdAndUpdate(req.params.id);
-  const allowedUpdates = ['firstName', 'lastName','roleId', 'status'];
-  const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+  const accountId = req.params.id;
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ['firstName', 'lastName', 'email', 'password', 'roleId', 'status'];
+  const isValidOperation = updates.every(update => allowedUpdates.includes(update));
 
   if (!isValidOperation) {
     return res.status(400).send({ error: 'Invalid updates!' });
   }
 
   try {
+
+    const account = await Account.findById(accountId);
+    if (!account) {
+      return res.status(404).send();
+    }
+
     let isPasswordBeingUpdated = updates.includes('password');
 
     for (const update of updates) {
       if (update === 'password' && isPasswordBeingUpdated) {
-        req.account.password = await bcrypt.hash(req.body.password, 8);
+        account[update] = await bcrypt.hash(req.body[update], 8);
       } else {
-        req.account[update] = req.body[update];
+        account[update] = req.body[update];
       }
     }
-    await req.account.save(); 
-    res.send(req.account);   
+    await account.save();
+    res.send(account);
   } catch (error) {
     res.status(400).send(error);
   }
 };
+
 
 
 const getAllAccounts = async (req, res) => {
