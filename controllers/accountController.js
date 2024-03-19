@@ -12,7 +12,9 @@ const generateAuthToken = async (user) => {
 
 const register = async (req, res) => {
   try {
-    const existingAccount = await Account.findOne({ username: req.body.username, email:req.body.email });
+    const existingAccount = await Account.findOne({
+      $or: [{ username: req.body.username }, { email: req.body.email }]
+    });
     if (existingAccount) {
       return res.status(409).send({ error: 'Username or email already exists with another account.' });
     }
@@ -41,7 +43,9 @@ const register = async (req, res) => {
 
 const registerForStaff = async (req, res) => {
   try {
-    const existingAccount = await Account.find({ username: req.body.username, email:req.body.email });
+    const existingAccount = await Account.findOne({
+      $or: [{ username: req.body.username }, { email: req.body.email }]
+    });
     if (existingAccount) {
       return res.status(409).send({ error: 'Username or email already exists with another account.' });
     }
