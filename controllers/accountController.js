@@ -27,12 +27,12 @@ const register = async (req, res) => {
 
     const account = new Account({
       ...req.body,
-      password: hashedPassword, 
+      password: hashedPassword,
       roleId: defaultRole._id,
     });
 
     const token = await generateAuthToken(account);
-    account.tokens = [token]; 
+    account.tokens = [token];
     await account.save();
     res.status(201).send({ account });
   } catch (error) {
@@ -58,12 +58,12 @@ const registerForStaff = async (req, res) => {
 
     const account = new Account({
       ...req.body,
-      password: hashedPassword, 
+      password: hashedPassword,
       roleId: defaultRole._id,
     });
 
     const token = await generateAuthToken(account);
-    account.tokens = [token]; 
+    account.tokens = [token];
     await account.save();
     res.status(201).send({ account });
   } catch (error) {
@@ -78,7 +78,7 @@ const login = async (req, res) => {
   try {
     const { username, password } = req.body;
     const account = await Account.findByCredentials(username, password);
-    
+
     if (!account) {
       return res.status(401).send({ error: 'Login failed' });
     }
@@ -106,7 +106,18 @@ const requestPasswordReset = async (req, res) => {
       return res.status(404).send({ error: 'User not found.' });
     }
 
-    const newPassword = "dumaconcac";
+    var generator = require('generate-password');
+
+    var generatePassword = generator.generate({
+      length: 16,
+      numbers: true,
+      strict: true,
+      excludeSimilarCharacters: true,
+      symbols: true,
+      exclude: true
+    });
+
+    const newPassword = generatePassword;
     account.password = await bcrypt.hash(newPassword, 8);
     await account.save();
 
@@ -185,9 +196,9 @@ const updateProfile = async (req, res) => {
         req.account[update] = req.body[update];
       }
     }
-    await req.account.save(); 
-    res.send(req.account);  
-    console.log(account) 
+    await req.account.save();
+    res.send(req.account);
+    console.log(account)
   } catch (error) {
     res.status(400).send(error);
   }
