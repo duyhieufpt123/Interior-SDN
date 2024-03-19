@@ -15,6 +15,8 @@ router.post('/resetPassword/:token', accountController.resetPassword);
 router.get('/profile', auth, accountController.getProfile);
 router.put('/profile', auth, accountController.updateProfile);
 router.post('/register/staff', auth, roleCheck('admin'), accountController.registerForStaff);
+router.put('/profile/:id', auth, roleCheck('admin'), accountController.updateProfile);
+
 
 //cái nào vừa có auth vừa có rolecheck admin thì kiếm token của admin thì mới làm việc dược
 router.delete('/:id', auth, roleCheck('admin'), accountController.deleteAccount);

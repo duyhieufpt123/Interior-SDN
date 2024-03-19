@@ -12,9 +12,9 @@ const generateAuthToken = async (user) => {
 
 const register = async (req, res) => {
   try {
-    const existingAccount = await Account.findOne({ username: req.body.username });
+    const existingAccount = await Account.find({ username: req.body.username, email:req.body.email });
     if (existingAccount) {
-      return res.status(409).send({ error: 'Username already exists with another account.' });
+      return res.status(409).send({ error: 'Username or email already exists with another account.' });
     }
 
     const defaultRole = await Role.findOne({ name: 'customer' });
@@ -41,9 +41,9 @@ const register = async (req, res) => {
 
 const registerForStaff = async (req, res) => {
   try {
-    const existingAccount = await Account.findOne({ username: req.body.username });
+    const existingAccount = await Account.find({ username: req.body.username, email:req.body.email });
     if (existingAccount) {
-      return res.status(409).send({ error: 'Username already exists with another account.' });
+      return res.status(409).send({ error: 'Username or email already exists with another account.' });
     }
 
     const defaultRole = await Role.findOne({ name: 'staff' });
@@ -187,6 +187,31 @@ const updateProfile = async (req, res) => {
   }
 };
 
+const AdminUpdateProfile = async (req, res) => {
+  const updates = Account.findByIdAndUpdate(req.params.id);
+  const allowedUpdates = ['firstName', 'lastName', 'email', 'roleId', 'status'];
+  const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+
+  if (!isValidOperation) {
+    return res.status(400).send({ error: 'Invalid updates!' });
+  }
+
+  try {
+    let isPasswordBeingUpdated = updates.includes('password');
+
+    for (const update of updates) {
+      if (update === 'password' && isPasswordBeingUpdated) {
+        req.account.password = await bcrypt.hash(req.body.password, 8);
+      } else {
+        req.account[update] = req.body[update];
+      }
+    }
+    await req.account.save(); 
+    res.send(req.account);   
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
 
 
 const getAllAccounts = async (req, res) => {
@@ -248,7 +273,8 @@ module.exports = {
   deleteAccount,
   requestPasswordReset,
   resetPassword,
-  registerForstaff
+  registerForStaff,
+  AdminUpdateProfile
 };
 
 

@@ -34,7 +34,7 @@ const accountSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true,
-    unique: true,
+    // unique: true,
     trim: true,
     lowercase: true
   },
@@ -42,7 +42,7 @@ const accountSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    unique: true,
+    // unique: true,
     lowercase: true
   },
 
